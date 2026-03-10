@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "licrice-standalone"
+version = "1.0.0"
+description = "LICRICE wind field model for tropical cyclones (standalone)"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "xarray",
+    "pandas",
+    "dask",
+    "scipy",
+    "zarr",
+    "scikit-learn",  # NEW
+    "joblib",  # NEW
+]
+
+[tool.setuptools.packages.find]
+include = ["licrice*"]

@@ -1,0 +1,6 @@
+numpy
+xarray
+pandas
+dask
+scipy
+zarr
