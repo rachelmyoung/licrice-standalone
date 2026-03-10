@@ -32,9 +32,9 @@ Expected structure
 licrice-standalone/
 ├── data/
 │   ├── raw/
-│   │   └── IBTrACS.ALL.v04r01.nc
+│   │   └── IBTrACS.ALL.v04r01.nc                     # IBTrACS files go here after they are extracted
 │   └── output/
-│       └── hazard_wind_licrice_hist_<domain>.zarr
+│       └── hazard_wind_licrice_hist_<domain>.zarr    # output final LICRICE wind files
 ├── params/
 ├── licrice/
 ├── run_licrice.py
@@ -152,7 +152,6 @@ Grid cell size is 0.1° (configurable via the params JSON).
 ```
 licrice-standalone/
 ├── run_licrice.py          # CLI entry point
-├── run_example.py          # Synthetic storm demo
 ├── params/
 │   └── licrice/v1.1.json   # Model parameters (vortex func, grid resolution, etc.)
 ├── licrice/
