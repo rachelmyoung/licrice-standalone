@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: licrice-standalone
+Version: 1.0.0
+Summary: LICRICE wind field model for tropical cyclones (standalone)
+Requires-Python: >=3.9
+Requires-Dist: numpy
+Requires-Dist: xarray
+Requires-Dist: pandas
+Requires-Dist: dask
+Requires-Dist: scipy
+Requires-Dist: zarr
+Requires-Dist: scikit-learn
+Requires-Dist: joblib

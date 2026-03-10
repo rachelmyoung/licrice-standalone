@@ -1,0 +1,8 @@
+numpy
+xarray
+pandas
+dask
+scipy
+zarr
+scikit-learn
+joblib
