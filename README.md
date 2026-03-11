@@ -39,7 +39,13 @@ licrice-standalone/
 │   │   └── aggregate_storm_admin.py  # After wind fields are constructed aggregates to admin0-2 level
 ├── data/
 │   ├── raw/
-│   │   └── IBTrACS.ALL.v04r01.nc                          # IBTrACS files go here after they are extracted
+│   │   ├── IBTrACS.ALL.v04r01.nc                          # IBTrACS files go here after they are extracted
+│   │   ├── admin/
+│   │   │   └── gadm_410.gpkg
+│   │   ├── LitPop_v1_2/
+│   │   │   └── LitPop_pc_30arcsec_<country>.csv/
+│   │   └── population/
+│   │       └── population.csv/
 │   ├── output/
 │   │   └── hazard_wind_licrice_hist_<domain>.zarr         # output LICRICE wind files
 │   └── aggregated/
@@ -70,6 +76,7 @@ Create directories for the IBTrACS input data and LICRICE outputs:
 ```bash
 mkdir -p data/raw
 mkdir -p data/output
+mkdir -p data/aggregate
 ```
 
 ### Data retrieval from the IBTrACs portal
@@ -105,8 +112,9 @@ python run_licrice.py \
     --domain all \
     --outdir data/output \
     --agg-schemes all \
-    --litpop-dir data/LitPop_v1_2 \
-    --population-dir data/population
+    --admin-file data/raw/admin/gadm_410.gpkg \
+    --litpop-dir data/raw/LitPop_v1_2 \
+    --population-dir data/raw/population
 ```
 
 If instead you wish to run the pipeline for specific domains or if you wish to run parts of the pipeline, you can also run the following bash commands.
