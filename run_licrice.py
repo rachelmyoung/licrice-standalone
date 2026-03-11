@@ -32,6 +32,7 @@ import argparse
 import json
 import pathlib
 import sys
+import subprocess
 
 
 # Domain definitions from pyTC.settings.Settings.GLOBAL_BBOXES and Settings.CONUS_BBOXES
@@ -164,6 +165,42 @@ def load_params(params_path=None):
     with open(params_path) as f:
         return json.load(f)
 
+def run_aggregation(outdir, domains, args):
+
+    if not args.aggregate:
+        return
+
+    print("\nRunning aggregation pipeline...")
+
+    schemes = args.agg_schemes
+    if "all" in schemes:
+        schemes = ["spatial", "population", "asset"]
+
+    for scheme in schemes:
+
+        cmd = [
+            sys.executable,
+            args.agg_script,
+            "--zarr-dir",
+            str(outdir),
+            "--scheme",
+            scheme
+        ]
+
+        if scheme == "asset":
+            if args.litpop_dir is None:
+                raise ValueError("Asset weighting requires --litpop-dir")
+            cmd += ["--litpop-dir", args.litpop_dir]
+
+        if scheme == "population":
+            if args.population_dir is None:
+                raise ValueError("Population weighting requires --population-dir")
+            cmd += ["--population-dir", args.population_dir]
+
+        print("Running:", " ".join(cmd))
+        subprocess.run(cmd, check=True)
+
+    print("Aggregation complete.")
 
 def main():
     parser = argparse.ArgumentParser(
@@ -247,7 +284,6 @@ def main():
         default="licrice/aggregate_storm_admin.py",
         help="Path to aggregation script."
     )
-    
 
     args = parser.parse_args()
 
@@ -368,6 +404,10 @@ def main():
 
     print("\nAll domains complete.")
 
+    # Runs the aggregation step
+    run_aggregation(outdir, selected_domains, args)
+    
+    print("\nAggregation complete.")
 
 if __name__ == "__main__":
     main()
