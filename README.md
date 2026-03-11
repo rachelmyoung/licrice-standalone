@@ -90,10 +90,16 @@ Or manually from [NOAA IBTrACS](https://www.ncei.noaa.gov/products/international
 
 ### Run LICRICE to construct storm wind swaths
 
-The entire pipeline for all of the domains (areas of the global, see below for additional details) and aggregating to three administrative boundary areas with three version of weigthing, can be run from the master workflow with the following bash:
+The entire pipeline for all of the domains (areas of the global, see below for additional details) and including aggregating to three administrative boundary areas with three version of weigthing, can be run from the master workflow with the following bash:
 
 ```bash
-# Standard run (recommended)
+# Standard run LICRICE (recommended)
+python run_licrice.py \
+    --input data/raw/IBTrACS.ALL.v04r01.nc \
+    --domain all \
+    --outdir data/output/
+
+# Standard run LICRICE + aggregation:
 python run_licrice.py \
     --input data/raw/IBTrACS.ALL.v04r01.nc \
     --domain all \
@@ -103,22 +109,16 @@ python run_licrice.py \
     --population-dir data/population
 ```
 
-If instead you wish to run the pipeline for specific domains or if you wish to run part of the pipeline, you can also run the following bash commands.
+If instead you wish to run the pipeline for specific domains or if you wish to run parts of the pipeline, you can also run the following bash commands.
 
 ```bash
-# Run everything except aggregations
-python run_licrice.py \
-    --input data/raw/IBTrACS.ALL.v04r01.nc \
-    --domain all \
-    --outdir data/output \
-
 # Run selected domains without aggregations
 python run_licrice.py \
     --input data/raw/IBTrACS.ALL.v04r01.nc \
     --domain north_atlantic_southwest western_pacific_south \
     --outdir data/output/
 
-# Run selected domains with selectd aggregations
+# Run selected domains + selectd aggregations
 python run_licrice.py \
     --input data/raw/IBTrACS.ALL.v04r01.nc \
     --domain north_atlantic_southwest western_pacific_south \
@@ -138,6 +138,23 @@ python run_licrice.py \
     --input data/raw/ibtracs_preprocessed.zarr \
     --domain north_atlantic_southwest \
     --outdir data/output/
+
+# Advance options: Use already run LICRICE and just run spatial aggregation
+python -m licrice.aggregation.aggregate_storm_admin \
+  --zarr-dir data/output \
+  --scheme spatial
+
+# Advance options: Population-weighted only
+python -m licrice.aggregation.aggregate_storm_admin \
+  --zarr-dir data/output \
+  --scheme population \
+  --population-dir data/population
+
+# Advance options: Asset-weighted only
+python -m licrice.aggregation.aggregate_storm_admin \
+  --zarr-dir data/output \
+  --scheme asset \
+  --litpop-dir data/LitPop_v1_2
 ```
 
 ### Command Line Interface (CLI) flags
