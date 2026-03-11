@@ -220,6 +220,34 @@ def main():
         "--list-domains", action="store_true",
         help="Print all built-in domain names and bounds, then exit.",
     )
+    parser.add_argument(
+        "--aggregate",
+        action="store_true",
+        help="Run administrative aggregation after LICRICE finishes."
+    )
+    parser.add_argument(
+        "--agg-schemes",
+        nargs="+",
+        default=["spatial"],
+        choices=["spatial", "population", "asset", "all"],
+        help="Aggregation weighting schemes to compute."
+    )
+    parser.add_argument(
+        "--litpop-dir",
+        default=None,
+        help="Path to LitPop asset files (required for asset weighting)."
+    )
+    parser.add_argument(
+        "--population-dir",
+        default=None,
+        help="Path to population grid files (required for population weighting)."
+    )
+    parser.add_argument(
+        "--agg-script",
+        default="licrice/aggregate_storm_admin.py",
+        help="Path to aggregation script."
+    )
+    
 
     args = parser.parse_args()
 
