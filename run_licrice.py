@@ -281,7 +281,7 @@ def main():
     )
     parser.add_argument(
         "--agg-script",
-        default="licrice/aggregate_storm_admin.py",
+        default="licrice/aggregation/aggregate_storm_admin.py",
         help="Path to aggregation script."
     )
 
