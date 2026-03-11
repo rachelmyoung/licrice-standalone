@@ -89,24 +89,41 @@ Or manually from [NOAA IBTrACS](https://www.ncei.noaa.gov/products/international
 
 ### Run LICRICE to construct storm wind swaths
 
-The entire pipeline for all of the domains (areas of the global, see below for additional details) can be run from the master workflow with the following bash:
+The entire pipeline for all of the domains (areas of the global, see below for additional details) and aggregating to three administrative boundary areas with three version of weigthing, can be run from the master workflow with the following bash:
 
 ```bash
 # Standard run (recommended)
 python run_licrice.py \
     --input data/raw/IBTrACS.ALL.v04r01.nc \
     --domain all \
-    --outdir data/output/
+    --outdir data/output \
+    --agg-schemes all \
+    --litpop-dir data/LitPop_v1_2 \
+    --population-dir data/population
 ```
 
 If instead you wish to run the pipeline for specific domains or if you wish to run part of the pipeline, you can also run the following bash commands.
 
-```bash  
-# Run selected domains
+```bash
+# Run everything except aggregations
+python run_licrice.py \
+    --input data/raw/IBTrACS.ALL.v04r01.nc \
+    --domain all \
+    --outdir data/output \
+
+# Run selected domains without aggregations
 python run_licrice.py \
     --input data/raw/IBTrACS.ALL.v04r01.nc \
     --domain north_atlantic_southwest western_pacific_south \
     --outdir data/output/
+
+# Run selected domains with selectd aggregations
+python run_licrice.py \
+    --input data/raw/IBTrACS.ALL.v04r01.nc \
+    --domain north_atlantic_southwest western_pacific_south \
+    --outdir data/output/
+    --aggregate \
+    --agg-schemes spatial
 
 # Advanced options: If you already have preprocessed tracks
 python run_licrice.py \
@@ -129,6 +146,11 @@ python run_licrice.py \
 | `--input` | Path to raw IBTrACS `.nc` or preprocessed `.zarr` |
 | `--domain` | One or more domain names, or `all` |
 | `--outdir` | Output directory |
+| `--aggregate` | Run administrative aggregation after LICRICE finishes  |
+| `--agg-schemes` | One or more aggregation scheme names (spatial, population, asset), or all; only used with --aggregate |
+| `--litpop-dir` | Path to LitPop asset files; required for asset aggregation and for all |
+| `--population-dir` | Path to population grid files; required for population aggregation and for all |
+| `--agg-script` | Path to the aggregation script (default: licrice/aggregation/aggregate_storm_admin.py) |
 | `--preproc-zarr` | Custom path for the preprocessed zarr (default: `<outdir>/ibtracs_preprocessed.zarr`) |
 | `--no-overwrite-preproc` | Skip preprocessing if the zarr already exists |
 | `--no-overwrite-output` | Skip LICRICE run if the output zarr already exists |
