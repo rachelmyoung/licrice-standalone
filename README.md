@@ -43,7 +43,7 @@ licrice-standalone/
 
 ## Replication Process
 
-### Install packages and file structure
+### Install packages
 
 ```bash
 git clone https://github.com/<your-org>/licrice-standalone.git 
@@ -60,7 +60,7 @@ mkdir -p data/raw
 mkdir -p data/output
 ```
 
-### Data retrieval from teh IBTrACs portal
+### Data retrieval from the IBTrACs portal
 
 Download International Best Track Archive for Climate Stewardship (IBTrACS) [v04r01] dataset from the NOAA National Centers for Environmental Information (NCEI) with:
 
