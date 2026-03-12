@@ -113,7 +113,7 @@ python run_licrice.py \
     --agg-schemes all \
     --admin-file data/raw/admin/gadm_410.gpkg \
     --litpop-dir data/raw/LitPop_v1_2 \
-    --population-dir data/raw/population
+    --landscan-path /data/raw/landscan-global-2015-assets/landscan-global-2015.tif
 ```
 
 If instead you wish to run the pipeline for specific domains or if you wish to run parts of the pipeline, you can also run the following bash commands.
@@ -155,13 +155,13 @@ python -m licrice.aggregation.aggregate_storm_admin \
 python -m licrice.aggregation.aggregate_storm_admin \
   --zarr-dir data/output \
   --scheme population \
-  --population-dir data/population
+  --landscan-path /data/raw/landscan-global-2015-assets/landscan-global-2015.tif
 
 # Advance options: Asset-weighted only
 python -m licrice.aggregation.aggregate_storm_admin \
   --zarr-dir data/output \
   --scheme asset \
-  --litpop-dir data/LitPop_v1_2
+  --litpop-dir data/raw/LitPop_v1_2/ 
 ```
 
 ### Command Line Interface (CLI) flags
