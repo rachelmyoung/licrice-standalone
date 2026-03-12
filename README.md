@@ -76,7 +76,6 @@ Create directories for the IBTrACS input data and LICRICE outputs:
 ```bash
 mkdir -p data/raw
 mkdir -p data/output
-mkdir -p data/aggregate
 ```
 
 ### Data retrieval from the IBTrACs portal
