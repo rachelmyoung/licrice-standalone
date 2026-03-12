@@ -122,7 +122,7 @@ python licrice/aggregation/aggregate_storm_admin.py \
     --scheme all \
     --admin-file data/raw/admin/gadm_410.gpkg \
     --litpop-dir data/raw/LitPop_v1_2 \
-    --landscan-path /data/raw/landscan-global-2015-assets/landscan-global-2015.tif
+    --landscan-path data/raw/landscan-global-2015-assets/landscan-global-2015.tif
 ```
 
 If instead you wish to run the pipeline for specific domains or if you wish to run parts of the pipeline, you can also run the following bash commands.
