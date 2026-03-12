@@ -47,14 +47,14 @@ licrice-standalone/
 │   │   └── population/
 │   │       └── population.csv/
 │   ├── output/
-│   │   └── hazard_wind_licrice_hist_<domain>.zarr         # output LICRICE wind files
-│   └── aggregated/
-│       ├── spatial/
-│       │   └── storm_<admin>_<domain>_<haz>.parquet     # output spaitally weighted wind fields
-│       ├── population/
-│       │   └── storm_<admin>_<domain>_<haz>.parquet     # output population weighted wind fields
-│       └── asset/
-│           └── storm_<admin>_<domain>_<haz>.parquet     # output asset weighted wind fields
+│   │   ├── hazard_wind_licrice_hist_<domain>.zarr         # output LICRICE wind files
+│   │   └── aggregated/
+│   │       ├── spatial/
+│   │       │   └── storm_<admin>_<domain>_<haz>.parquet     # output spaitally weighted wind fields
+│   │       ├── population/
+│   │       │   └── storm_<admin>_<domain>_<haz>.parquet     # output population weighted wind fields
+│   │       └── asset/
+│   │           └── storm_<admin>_<domain>_<haz>.parquet     # output asset weighted wind fields
 └── pyproject.toml
 ```
 
