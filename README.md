@@ -110,7 +110,16 @@ python run_licrice.py \
     --input data/raw/IBTrACS.ALL.v04r01.nc \
     --domain all \
     --outdir data/output \
+    --aggregate \
     --agg-schemes all \
+    --admin-file data/raw/admin/gadm_410.gpkg \
+    --litpop-dir data/raw/LitPop_v1_2 \
+    --landscan-path data/raw/landscan-global-2015-assets/landscan-global-2015.tif
+
+# Standard run aggregation:
+python licrice/aggregation/aggregate_storm_admin.py \
+    --zarr-dir data/output \
+    --scheme all \
     --admin-file data/raw/admin/gadm_410.gpkg \
     --litpop-dir data/raw/LitPop_v1_2 \
     --landscan-path /data/raw/landscan-global-2015-assets/landscan-global-2015.tif
