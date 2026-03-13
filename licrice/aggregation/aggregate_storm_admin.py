@@ -118,18 +118,25 @@ def require_admin_file(admin_file: str | Path) -> Path:
 # GRID / OVERLAP HELPERS
 # ---------------------------------------------------------------------
 
+from rasterio.transform import from_origin
+
 def _grid_edges_1d(vals: np.ndarray) -> np.ndarray:
     """
-    Build 1D cell edges from 1D centers (monotone, equally spaced).
-    Returns edges of length n+1.
-    Works for ascending or descending.
+    Build 1D cell edges from 1D centers.
+    Works for ascending or descending coordinates.
     """
     v = np.asarray(vals, dtype="float64")
     if v.size < 2:
         raise ValueError("Need at least 2 grid points to infer spacing.")
     dv = float(v[1] - v[0])
-    edges = np.concatenate([v - dv / 2.0, [v[-1] + dv / 2.0]])
-    return edges
+    return np.concatenate([v - dv / 2.0, [v[-1] + dv / 2.0]])
+
+def _grid_edges_from_centers(vals: np.ndarray) -> np.ndarray:
+    v = np.asarray(vals, dtype="float64")
+    if v.size < 2:
+        raise ValueError("Need at least 2 points to infer edges.")
+    dv = float(v[1] - v[0])
+    return np.concatenate([v - dv / 2.0, [v[-1] + dv / 2.0]])
 
 
 def _window_from_bounds_1d(
@@ -285,8 +292,8 @@ def build_uncond_area_share_matrix_lazy(
     nlon = lon.size
     n_cells = nlat * nlon
 
-    lat_edges = _grid_edges_1d(lat)
-    lon_edges = _grid_edges_1d(lon)
+    lat_edges = _grid_edges_from_centers(lat)
+    lon_edges = _grid_edges_from_centers(lon)
 
     transformer = Transformer.from_crs(lonlat_crs, projected_crs, always_xy=True)
 
@@ -532,18 +539,43 @@ def load_landscan_to_wind_grid(
     dst_crs: str = "EPSG:4326",
 ) -> np.ndarray:
     """
-    Load one annual LandScan raster and resample/reproject it onto the LICRICE wind grid.
+    Load one LandScan raster and resample/reproject it onto the LICRICE wind grid.
 
     Returns:
-        pop_grid with shape (nlat, nlon)
+        pop_grid with shape (nlat, nlon), aligned to the original lat/lon ordering.
     """
     landscan_path = Path(landscan_path)
     if not landscan_path.exists():
         raise FileNotFoundError(f"LandScan raster not found: {landscan_path}")
 
-    dst_shape = (len(lat_array), len(lon_array))
-    dst = np.zeros(dst_shape, dtype=np.float32)
-    dst_transform = _grid_transform_from_centers(lat_array, lon_array)
+    lat = np.asarray(lat_array, dtype="float64")
+    lon = np.asarray(lon_array, dtype="float64")
+
+    nlat = len(lat)
+    nlon = len(lon)
+
+    if nlat < 2 or nlon < 2:
+        raise ValueError("Need at least 2 lat/lon points to infer spacing.")
+
+    lat_desc = lat[0] > lat[-1]
+    lon_desc = lon[0] > lon[-1]
+
+    # Build ascending lon and descending lat for rasterio destination grid
+    lon_work = lon if lon[0] < lon[-1] else lon[::-1]
+    lat_work = lat if lat[0] > lat[-1] else lat[::-1]
+
+    lon_edges = _grid_edges_from_centers(lon_work)
+    lat_edges = _grid_edges_from_centers(lat_work)
+
+    xres = abs(lon_work[1] - lon_work[0])
+    yres = abs(lat_work[1] - lat_work[0])
+
+    west = lon_edges.min()
+    north = lat_edges.max()
+
+    dst_transform = from_origin(west, north, xres, yres)
+
+    dst = np.zeros((nlat, nlon), dtype=np.float32)
 
     with rasterio.open(landscan_path) as src:
         reproject(
@@ -560,6 +592,13 @@ def load_landscan_to_wind_grid(
 
     dst = np.where(np.isfinite(dst), dst, 0.0).astype(np.float32, copy=False)
     dst[dst < 0] = 0.0
+
+    # Map back to the original LICRICE axis ordering
+    if not lat_desc:
+        dst = dst[::-1, :]
+    if lon_desc:
+        dst = dst[:, ::-1]
+
     return dst
 
 
