@@ -239,8 +239,36 @@ Data variables
 Grid cell size is 0.1° (configurable via the params JSON).
 
 ## Aggregation to adminstative boundary
+In addition to the gridded storm wind fields, this repository provides storm-level hazard exposures aggregated to administrative boundaries using GADM polygons. Aggregations are produced for administrative levels ADM0 (country), ADM1 (first-level), and ADM2 (second-level).
+
+Three weighting schemes are provided:
+- `spatial` — area-weighted mean hazard within the administrative unit
+- `asset` — asset-weighted mean using LitPop asset values
+- `population` — population-weighted mean using LandScan population counts
+
+All measures are computed as unconditional means over the full administrative unit, so grid cells with zero hazard still enter the denominator.
+
+### Storm-level outputs
+The primary outputs are Parquet files containing storm–administrative unit observations. Each row corresponds to one storm intersecting one administrative unit.
+
+Typical columns include:
+| Column |	Description |
+|---|---|
+| `storm_idx` |	Storm identifier within basin |
+| `storm_date` |	Storm start date |
+| `year, month` |	Date components |
+| `basin` |	Storm basin |
+| `admin_level` |	GADM level (0, 1, or 2) |
+| `admin_id` |	Administrative unit identifier |
+| `scheme` |	Weighting scheme (spatial, asset, population) |
+| `haz_var` |	Hazard variable (e.g., maxs) |
+| `value` |	Aggregated hazard value |
 
 
+Example filename:
+```bash
+storm_admin0_assetw_west_pacific_maxs.parquet
+```
 
 ## Notes
 
